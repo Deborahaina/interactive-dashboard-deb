@@ -160,7 +160,8 @@ function buildCharts(sample) {
         values: pie_values,
         labels: pie_labels,
         hovertext: pie_hover,
-        type: 'pie'
+        type: 'pie',
+        title:'hover over me'
       }];
 
       Plotly.newPlot('pie', data);
