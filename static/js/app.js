@@ -164,6 +164,10 @@ function buildCharts(sample) {
         title:'hover over me'
       }];
 
+      var layout = {
+        showlegend: true,
+      };
+
       Plotly.newPlot('pie', data);
 
     });
