@@ -5,7 +5,7 @@ function buildMetadata(sample) {
 
   // Use `d3.json` to fetch the metadata for a sample
   var url = `/metadata/${sample}`;
-  d3.json(url).then(function(sample){
+  d3.json(url).then(function (sample) {
     // Use d3 to select the panel with id of `#sample-metadata`
     var sample_metadata = d3.select("#sample-metadata");
 
@@ -20,21 +20,114 @@ function buildMetadata(sample) {
       var row = sample_metadata.append("p");
       row.text(`${key}: ${value}`);
 
-});
+    })
   }
-)};
+  )
+};
+
+
+function buildGauge(wfreq) {
+  // Enter the washing frequency between 0 and 180
+  var level = parseFloat(wfreq) * 20;
+
+  // Trig to calc meter point
+  var degrees = 180 - level;
+  var radius = 0.5;
+  var radians = (degrees * Math.PI) / 180;
+  var x = radius * Math.cos(radians);
+  var y = radius * Math.sin(radians);
+
+  // Path: may have to change to create a better triangle
+  var mainPath = "M -.0 -0.05 L .0 0.05 L ";
+  var pathX = String(x);
+  var space = " ";
+  var pathY = String(y);
+  var pathEnd = " Z";
+  var path = mainPath.concat(pathX, space, pathY, pathEnd);
+
+  var data = [
+    {
+      type: "scatter",
+      x: [0],
+      y: [0],
+      marker: { size: 12, color: "850000" },
+      showlegend: false,
+      name: "Freq",
+      text: level,
+      hoverinfo: "text+name"
+    },
+    {
+      values: [50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50],
+      rotation: 90,
+      text: ["8-9", "7-8", "6-7", "5-6", "4-5", "3-4", "2-3", "1-2", "0-1", ""],
+      textinfo: "text",
+      textposition: "inside",
+      marker: {
+        colors: [
+          "rgba(0, 105, 11, .5)",
+          "rgba(10, 120, 22, .5)",
+          "rgba(14, 127, 0, .5)",
+          "rgba(110, 154, 22, .5)",
+          "rgba(170, 202, 42, .5)",
+          "rgba(202, 209, 95, .5)",
+          "rgba(210, 206, 145, .5)",
+          "rgba(232, 226, 202, .5)",
+          "rgba(240, 230, 215, .5)",
+          "rgba(255, 255, 255, 0)"
+        ]
+      },
+      labels: ["8-9", "7-8", "6-7", "5-6", "4-5", "3-4", "2-3", "1-2", "0-1", ""],
+      hoverinfo: "label",
+      hole: 0.5,
+      type: "pie",
+      showlegend: false
+    }
+  ];
+
+  var layout = {
+    shapes: [
+      {
+        type: "path",
+        path: path,
+        fillcolor: "850000",
+        line: {
+          color: "850000"
+        }
+      }
+    ],
+    title: "<b>Belly Button Washing Frequency</b> <br> Scrubs per Week",
+    height: 500,
+    width: 500,
+    xaxis: {
+      zeroline: false,
+      showticklabels: false,
+      showgrid: false,
+      range: [-1, 1]
+    },
+    yaxis: {
+      zeroline: false,
+      showticklabels: false,
+      showgrid: false,
+      range: [-1, 1]
+    }
+  };
+
+  var GAUGE = document.getElementById("gauge");
+  Plotly.newPlot(GAUGE, data, layout);
+}
+
 
 function buildCharts(sample) {
 
   // @TODO: Use `d3.json` to fetch the sample data for the plots
   var url = `/samples/${sample}`;
-  d3.json(url).then(function(data) {
+  d3.json(url).then(function (data) {
 
     // @TODO: Build a Bubble Chart using the sample data
     var x_values = data.otu_ids;
     var y_values = data.sample_values;
     var m_size = data.sample_values;
-    var m_colors = data.otu_ids; 
+    var m_colors = data.otu_ids;
     var t_values = data.otu_labels;
 
     var trace1 = {
@@ -45,23 +138,23 @@ function buildCharts(sample) {
       marker: {
         color: m_colors,
         size: m_size
-      } 
+      }
     };
-  
+
     var data = [trace1];
 
     var layout = {
-      xaxis: { title: "OTU ID"},
+      xaxis: { title: "OTU ID" },
     };
 
     Plotly.newPlot('bubble', data, layout);
-   
+
 
     // @TODO: Build a Pie Chart
-    d3.json(url).then(function(data) {  
-    var pie_values = data.sample_values.slice(0,10);
-      var pie_labels = data.otu_ids.slice(0,10);
-      var pie_hover = data.otu_labels.slice(0,10);
+    d3.json(url).then(function (data) {
+      var pie_values = data.sample_values.slice(0, 10);
+      var pie_labels = data.otu_ids.slice(0, 10);
+      var pie_hover = data.otu_labels.slice(0, 10);
 
       var data = [{
         values: pie_values,
@@ -73,7 +166,7 @@ function buildCharts(sample) {
       Plotly.newPlot('pie', data);
 
     });
-  });   
+  });
 }
 
 
@@ -94,6 +187,7 @@ function init() {
     const firstSample = sampleNames[0];
     buildCharts(firstSample);
     buildMetadata(firstSample);
+    buildGauge(firstSample);
   });
 }
 
@@ -101,6 +195,7 @@ function optionChanged(newSample) {
   // Fetch new data each time a new sample is selected
   buildCharts(newSample);
   buildMetadata(newSample);
+  buildGauge(newSample);
 }
 
 // Initialize the dashboard
