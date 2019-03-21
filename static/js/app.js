@@ -25,7 +25,9 @@ function buildMetadata(sample) {
   )
 };
 
-
+/**
+ * BONUS Solution
+ * */
 function buildGauge(wfreq) {
   // Enter the washing frequency between 0 and 180
   var level = parseFloat(wfreq) * 20;
@@ -112,9 +114,10 @@ function buildGauge(wfreq) {
     }
   };
 
-  
-  Plotly.newPlot('guage', data, layout);
+  var GAUGE = document.getElementById("gauge");
+  Plotly.newPlot(GAUGE, data, layout);
 }
+
 
 
 function buildCharts(sample) {
@@ -161,7 +164,6 @@ function buildCharts(sample) {
         labels: pie_labels,
         hovertext: pie_hover,
         type: 'pie',
-        title:'hover over me'
       }];
 
       var layout = {
@@ -200,7 +202,7 @@ function optionChanged(newSample) {
   // Fetch new data each time a new sample is selected
   buildCharts(newSample);
   buildMetadata(newSample);
-  buildGauge(newSample);
+
 }
 
 // Initialize the dashboard
