@@ -1,9 +1,14 @@
 # interactive-dashboard-deb
-Bacteria by filterforge.com
+Data was derived  from Bacteria by filterforge.com
+
+Technologies Used
+Frontend- Javscript,HTML,CSS(Plotly)
+Backend- Python(Flask)
+Database -MySQL
+
 Step 1 - Plotly.js
 
-We are tasked to us se Plotly.js to build interactive charts for our dashboard.
-
+We are tasked to use Plotly.js to build interactive charts for our dashboard.
 
 
 1. Create a PIE chart that uses data from your samples route (/samples/<sample>) to display the top 10 samples.
@@ -36,10 +41,9 @@ You are welcome to create any layout that you would like for your dashboard. An 
 
 Step 2 - Heroku
 
-Deploy your Flask app to Heroku.
+Deploy this Flask app to Heroku.
 
-
-You can use the provided sqlite file for the database or any other database of your choice.
+WE are encouraged to use the database of our choice. 
 
 
 
