@@ -1,5 +1,5 @@
 # interactive-dashboard-deb
-Data was derived  from Bacteria by filterforge.com
+Data used was from the study of different Bacteria by filterforge.com
 
 Technologies Used
 Frontend- Javscript,HTML,CSS(Plotly)
